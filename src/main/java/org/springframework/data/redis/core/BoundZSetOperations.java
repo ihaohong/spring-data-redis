@@ -462,6 +462,13 @@ public interface BoundZSetOperations<K, V> extends BoundKeyOperations<K> {
 	Set<V> reverseRangeByLex(Range range, Limit limit);
 
 	/**
+	 *
+	 * @return
+	 */
+	@Nullable
+	V popMax();
+
+	/**
 	 * @return never {@literal null}.
 	 */
 	RedisOperations<K, V> getOperations();

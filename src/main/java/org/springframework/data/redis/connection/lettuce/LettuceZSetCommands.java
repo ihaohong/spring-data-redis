@@ -543,6 +543,14 @@ class LettuceZSetCommands implements RedisZSetCommands {
 				LettuceConverters.<byte[]> toRange(range, true), LettuceConverters.toLimit(limit)).toSet();
 	}
 
+	@Override
+	public byte[] zPopMax(byte[] key) {
+		Assert.notNull(key, "Key must not be null!");
+
+		Tuple tuple = connection.invoke().from(RedisSortedSetAsyncCommands::zpopmax, key).get(LettuceConverters::toTuple);
+		return tuple.getValue();
+	}
+
 	public RedisClusterCommands<byte[], byte[]> getConnection() {
 		return connection.getConnection();
 	}

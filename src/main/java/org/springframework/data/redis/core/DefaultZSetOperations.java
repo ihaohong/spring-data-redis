@@ -540,4 +540,11 @@ class DefaultZSetOperations<K, V> extends AbstractOperations<K, V> implements ZS
 		return execute(connection -> connection.zRangeByScore(rawKey, min, max, offset, count), true);
 	}
 
+	@Override
+	public V popMax(K key) {
+		byte[] rawKey = rawKey(key);
+		byte[] rawValue = execute(connection -> connection.zPopMax(rawKey), true);
+		return deserializeValue(rawValue);
+	}
+
 }

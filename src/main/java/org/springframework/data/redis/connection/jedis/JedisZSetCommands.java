@@ -15,12 +15,7 @@
  */
 package org.springframework.data.redis.connection.jedis;
 
-import redis.clients.jedis.BinaryJedis;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.MultiKeyPipelineBase;
-import redis.clients.jedis.ScanParams;
-import redis.clients.jedis.ScanResult;
-import redis.clients.jedis.ZParams;
+import redis.clients.jedis.*;
 import redis.clients.jedis.params.ZAddParams;
 
 import java.nio.charset.StandardCharsets;
@@ -580,6 +575,16 @@ class JedisZSetCommands implements RedisZSetCommands {
 
 		return connection.invoke().from(BinaryJedis::zrevrangeByLex, MultiKeyPipelineBase::zrevrangeByLex, key, max, min)
 				.get(LinkedHashSet::new);
+	}
+
+	@Override
+	public byte[] zPopMax(byte[] key) {
+		Assert.notNull(key, "Key must not be null!");
+
+		Tuple tuple = connection.invoke().from(BinaryJedis::zpopmax, MultiKeyPipelineBase::zpopmax, key)
+				.get(JedisConverters::toTuple);
+
+		return tuple == null ? null : tuple.getValue();
 	}
 
 	private boolean isPipelined() {

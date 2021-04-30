@@ -1274,4 +1274,6 @@ public interface RedisZSetCommands {
 	@Nullable
 	Set<byte[]> zRevRangeByLex(byte[] key, Range range, Limit limit);
 
+	@Nullable
+	byte[] zPopMax(byte[] key);
 }

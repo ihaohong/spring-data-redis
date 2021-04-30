@@ -366,6 +366,11 @@ class DefaultBoundZSetOperations<K, V> extends DefaultBoundKeyOperations<K> impl
 		return ops.unionAndStore(getKey(), otherKeys, destKey, aggregate, weights);
 	}
 
+	@Override
+	public V popMax() {
+		return ops.popMax(getKey());
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.redis.core.BoundKeyOperations#getType()

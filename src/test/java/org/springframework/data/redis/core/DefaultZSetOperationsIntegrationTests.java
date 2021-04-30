@@ -471,4 +471,18 @@ public class DefaultZSetOperationsIntegrationTests<K, V> {
 		assertThat(zSetOps.score(key1, value1)).isCloseTo(6.0, offset(0.1));
 	}
 
+	@ParameterizedRedisTest
+	void testZsetPopMax() {
+		K key1 = keyFactory.instance();
+		V value1 = valueFactory.instance();
+		V value2 = valueFactory.instance();
+
+		assertThat(zSetOps.popMax(key1)).isNull();
+
+		zSetOps.add(key1, value1, 4.0);
+		zSetOps.add(key1, value2, 5.0);
+
+		assertThat(zSetOps.popMax(key1)).isEqualTo(value2);
+	}
+
 }

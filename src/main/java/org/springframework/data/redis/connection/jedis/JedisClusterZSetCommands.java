@@ -392,6 +392,14 @@ class JedisClusterZSetCommands implements RedisZSetCommands {
 		}
 	}
 
+	@Override
+	public byte[] zPopMax(byte[] key) {
+		Assert.notNull(key, "Key must not be null!");
+
+		redis.clients.jedis.Tuple tuple = connection.getCluster().zpopmax(key);
+		return tuple.getBinaryElement();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.redis.connection.RedisZSetCommands#zRangeWithScores(byte[], long, long)

@@ -588,6 +588,14 @@ public interface ZSetOperations<K, V> {
 	@Nullable
 	Set<V> reverseRangeByLex(K key, Range range, Limit limit);
 
+
+	/**
+	 * @param key
+	 * @return
+	 */
+	@Nullable
+	V popMax(K key);
+
 	/**
 	 * @return never {@literal null}.
 	 */
