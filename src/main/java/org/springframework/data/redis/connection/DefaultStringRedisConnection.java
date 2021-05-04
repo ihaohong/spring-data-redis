@@ -276,6 +276,7 @@ public class DefaultStringRedisConnection implements StringRedisConnection, Deco
 		return convertAndReturn(delegate.del(keys), Converters.identityConverter());
 	}
 
+	@Override
 	public Boolean copy(byte[] sourceKey, byte[] targetKey) {
 		return convertAndReturn(delegate.copy(sourceKey, targetKey), Converters.identityConverter());
 	}
@@ -1901,6 +1902,10 @@ public class DefaultStringRedisConnection implements StringRedisConnection, Deco
 	@Override
 	public Long del(String... keys) {
 		return del(serializeMulti(keys));
+	}
+
+	public Boolean copy(String sourceKey, String targetKey) {
+		return copy(serialize(sourceKey), serialize(targetKey));
 	}
 
 	/*

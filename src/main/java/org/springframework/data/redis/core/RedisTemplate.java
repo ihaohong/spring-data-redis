@@ -710,6 +710,7 @@ public class RedisTemplate<K, V> extends RedisAccessor implements RedisOperation
 		return result != null && result.intValue() == 1;
 	}
 
+	@Override
 	public Boolean copy(K source, K target) {
 		byte[] sourceKey = rawKey(source);
 		byte[] targetKey = rawKey(target);

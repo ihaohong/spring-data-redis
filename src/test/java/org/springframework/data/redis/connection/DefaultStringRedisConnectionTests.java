@@ -235,6 +235,13 @@ public class DefaultStringRedisConnectionTests {
 	}
 
 	@Test
+	public void testCopy() {
+		doReturn(Boolean.TRUE).when(nativeConnection).copy(fooBytes, barBytes);
+		actual.add(connection.copy(foo, bar));
+		verifyResults(Collections.singletonList(Boolean.TRUE));
+	}
+
+	@Test
 	public void testEchoBytes() {
 		doReturn(barBytes).when(nativeConnection).echo(fooBytes);
 		actual.add(connection.echo(fooBytes));

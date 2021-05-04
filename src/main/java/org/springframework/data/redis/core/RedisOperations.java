@@ -199,6 +199,9 @@ public interface RedisOperations<K, V> {
 	@Nullable
 	Long delete(Collection<K> keys);
 
+	@Nullable
+	Boolean copy(K sourceKey, K targetKey);
+
 	/**
 	 * Unlink the {@code key} from the keyspace. Unlike with {@link #delete(Object)} the actual memory reclaiming here
 	 * happens asynchronously.
