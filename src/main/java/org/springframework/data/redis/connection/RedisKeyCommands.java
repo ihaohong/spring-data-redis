@@ -71,6 +71,9 @@ public interface RedisKeyCommands {
 	@Nullable
 	Long del(byte[]... keys);
 
+	@Nullable
+	Boolean copy(byte[] sourceKey, byte[] targetKey);
+
 	/**
 	 * Unlink the {@code keys} from the keyspace. Unlike with {@link #del(byte[]...)} the actual memory reclaiming here
 	 * happens asynchronously.

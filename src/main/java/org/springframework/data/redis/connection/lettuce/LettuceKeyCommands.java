@@ -90,6 +90,14 @@ class LettuceKeyCommands implements RedisKeyCommands {
 		return connection.invoke().just(RedisKeyAsyncCommands::del, keys);
 	}
 
+	@Override
+	public Boolean copy(byte[] sourceKey, byte[] targetKey) {
+		Assert.notNull(sourceKey, "source key must not be null!");
+		Assert.notNull(targetKey, "target key must not be null!");
+
+		return connection.invoke().just(RedisKeyAsyncCommands::copy, targetKey, sourceKey);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.redis.connection.RedisKeyCommands#unlink(byte[][])

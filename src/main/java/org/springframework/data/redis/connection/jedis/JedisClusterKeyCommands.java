@@ -87,6 +87,14 @@ class JedisClusterKeyCommands implements RedisKeyCommands {
 				.resultsAsList().size();
 	}
 
+	@Override
+	public Boolean copy(byte[] sourceKey, byte[] targetKey) {
+		Assert.notNull(sourceKey, "source key must not be null!");
+		Assert.notNull(targetKey, "target key must not be null!");
+
+		return connection.getCluster().copy(sourceKey, targetKey, false);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.redis.connection.RedisKeyCommands#unlink(byte[][])

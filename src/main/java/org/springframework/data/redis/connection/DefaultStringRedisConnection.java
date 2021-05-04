@@ -276,6 +276,10 @@ public class DefaultStringRedisConnection implements StringRedisConnection, Deco
 		return convertAndReturn(delegate.del(keys), Converters.identityConverter());
 	}
 
+	public Boolean copy(byte[] sourceKey, byte[] targetKey) {
+		return convertAndReturn(delegate.copy(sourceKey, targetKey), Converters.identityConverter());
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.redis.connection.RedisKeyCommands#unlink(byte[][])

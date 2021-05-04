@@ -83,6 +83,12 @@ public interface DefaultedRedisConnection extends RedisConnection {
 		return keyCommands().del(keys);
 	}
 
+	@Override
+	@Deprecated
+	default Boolean copy(byte[] sourceKey, byte[] targetKey) {
+		return keyCommands().copy(sourceKey, targetKey);
+	}
+
 	/** @deprecated in favor of {@link RedisConnection#keyCommands()}. */
 	@Override
 	@Deprecated
