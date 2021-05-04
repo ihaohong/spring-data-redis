@@ -468,6 +468,16 @@ public interface BoundZSetOperations<K, V> extends BoundKeyOperations<K> {
 	@Nullable
 	V popMax();
 
+	@Nullable
+	Set<V> popMax(int count);
+
+	@Nullable
+	TypedTuple<V> popMaxWithScore();
+
+	@Nullable
+	Set<TypedTuple<V>> popMaxWithScore(int count);
+
+
 	/**
 	 * @return never {@literal null}.
 	 */

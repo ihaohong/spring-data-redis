@@ -555,9 +555,25 @@ class LettuceZSetCommands implements RedisZSetCommands {
 	@Override
 	public Set<byte[]> zPopMax(byte[] key, int count) {
 		Assert.notNull(key, "Key must not be null!");
+		Assert.isTrue(count > 0, "count must greater than 0!");
 
 		Set<Tuple> tuples = connection.invoke().from(RedisSortedSetAsyncCommands::zpopmax, key, count).get(LettuceConverters::toTupleSet);
 		return tuples.stream().map(Tuple::getValue).collect(Collectors.toSet());
+	}
+
+	@Override
+	public Tuple zPopMaxWithScore(byte[] key) {
+		Assert.notNull(key, "Key must not be null!");
+
+		return connection.invoke().from(RedisSortedSetAsyncCommands::zpopmax, key).get(LettuceConverters::toTuple);
+	}
+
+	@Override
+	public Set<Tuple> zPopMaxWithScore(byte[] key, int count) {
+		Assert.notNull(key, "Key must not be null!");
+		Assert.isTrue(count > 0, "count must greater than 0!");
+
+		return connection.invoke().from(RedisSortedSetAsyncCommands::zpopmax, key, count).get(LettuceConverters::toTupleSet);
 	}
 
 	public RedisClusterCommands<byte[], byte[]> getConnection() {

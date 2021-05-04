@@ -591,11 +591,27 @@ class JedisZSetCommands implements RedisZSetCommands {
 	@Override
 	public Set<byte[]> zPopMax(byte[] key, int count) {
 		Assert.notNull(key, "Key must not be null!");
-		Assert.isTrue(count > 0, () -> "xx");
+		Assert.isTrue(count > 0, () -> "count must greater than 0!");
 
 		Set<Tuple> tuples = connection.invoke().from(BinaryJedis::zpopmax, MultiKeyPipelineBase::zpopmax, key, count).get(JedisConverters::toTupleSet);
 
 		return tuples.stream().map(tuple -> tuple.getValue()).collect(Collectors.toSet());
+	}
+
+	@Override
+	public Tuple zPopMaxWithScore(byte[] key) {
+		Assert.notNull(key, "Key must not be null!");
+
+		return connection.invoke().from(BinaryJedis::zpopmax, MultiKeyPipelineBase::zpopmax, key)
+				.get(JedisConverters::toTuple);
+	}
+
+	@Override
+	public Set<Tuple> zPopMaxWithScore(byte[] key, int count) {
+		Assert.notNull(key, "Key must not be null!");
+		Assert.isTrue(count > 0, () -> "count must greater than 0!");
+
+		return connection.invoke().from(BinaryJedis::zpopmax, MultiKeyPipelineBase::zpopmax, key, count).get(JedisConverters::toTupleSet);
 	}
 
 	private boolean isPipelined() {

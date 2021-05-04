@@ -1279,4 +1279,11 @@ public interface RedisZSetCommands {
 
 	@Nullable
 	Set<byte[]> zPopMax(byte[] key, int count);
+
+	@Nullable
+	Tuple zPopMaxWithScore(byte[] key);
+
+	@Nullable
+	Set<Tuple> zPopMaxWithScore(byte[] key, int count);
+
 }

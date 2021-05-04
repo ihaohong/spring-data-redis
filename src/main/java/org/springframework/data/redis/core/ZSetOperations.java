@@ -595,12 +595,12 @@ public interface ZSetOperations<K, V> {
 	@Nullable
 	Set<V> popMax(K key, int count);
 
-//	@Nullable
-//	TypedTuple<V> popMaxWithScore(K key);
-//
-//	@Nullable
-//	Set<TypedTuple<V>> popMaxWithScore(K key, int count);
-//
+	@Nullable
+	TypedTuple<V> popMaxWithScore(K key);
+
+	@Nullable
+	Set<TypedTuple<V>> popMaxWithScore(K key, int count);
+
 
 	/**
 	 * @return never {@literal null}.
