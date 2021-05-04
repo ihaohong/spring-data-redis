@@ -3718,6 +3718,11 @@ public class DefaultStringRedisConnection implements StringRedisConnection, Deco
 		return convertAndReturn(delegate.zPopMax(key), Converters.identityConverter());
 	}
 
+	@Override
+	public Set<byte[]> zPopMax(byte[] key, int count) {
+		return convertAndReturn(delegate.zPopMax(key, count), Converters.identityConverter());
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.redis.connection.StringRedisConnection#zRevRangeByLex(java.lang.String, org.springframework.data.redis.connection.RedisZSetCommands.Range, org.springframework.data.redis.connection.RedisZSetCommands.Limit)

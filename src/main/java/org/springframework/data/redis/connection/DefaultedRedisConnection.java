@@ -1114,6 +1114,12 @@ public interface DefaultedRedisConnection extends RedisConnection {
 		return zSetCommands().zPopMax(key);
 	}
 
+	@Override
+	@Deprecated
+	default Set<byte[]> zPopMax(byte[] key, int count) {
+		return zSetCommands().zPopMax(key, count);
+	}
+
 	// HASH COMMANDS
 
 	/** @deprecated in favor of {@link RedisConnection#hashCommands()}}. */

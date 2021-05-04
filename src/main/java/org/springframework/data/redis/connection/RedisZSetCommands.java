@@ -1276,4 +1276,7 @@ public interface RedisZSetCommands {
 
 	@Nullable
 	byte[] zPopMax(byte[] key);
+
+	@Nullable
+	Set<byte[]> zPopMax(byte[] key, int count);
 }

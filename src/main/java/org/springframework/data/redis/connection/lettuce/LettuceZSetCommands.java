@@ -24,6 +24,7 @@ import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.data.redis.connection.RedisZSetCommands;
 import org.springframework.data.redis.connection.RedisZSetCommands.ZAddArgs.Flag;
@@ -549,6 +550,14 @@ class LettuceZSetCommands implements RedisZSetCommands {
 
 		Tuple tuple = connection.invoke().from(RedisSortedSetAsyncCommands::zpopmax, key).get(LettuceConverters::toTuple);
 		return tuple.getValue();
+	}
+
+	@Override
+	public Set<byte[]> zPopMax(byte[] key, int count) {
+		Assert.notNull(key, "Key must not be null!");
+
+		Set<Tuple> tuples = connection.invoke().from(RedisSortedSetAsyncCommands::zpopmax, key, count).get(LettuceConverters::toTupleSet);
+		return tuples.stream().map(Tuple::getValue).collect(Collectors.toSet());
 	}
 
 	public RedisClusterCommands<byte[], byte[]> getConnection() {

@@ -19,6 +19,7 @@ import redis.clients.jedis.ScanParams;
 import redis.clients.jedis.ZParams;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -397,7 +398,16 @@ class JedisClusterZSetCommands implements RedisZSetCommands {
 		Assert.notNull(key, "Key must not be null!");
 
 		redis.clients.jedis.Tuple tuple = connection.getCluster().zpopmax(key);
-		return tuple.getBinaryElement();
+		return tuple == null ? null : tuple.getBinaryElement();
+	}
+
+	@Override
+	public Set<byte[]> zPopMax(byte[] key, int count) {
+		Assert.notNull(key, "Key must not be null!");
+		Assert.isTrue(count > 0, "count must greater than 0");
+
+		Set<redis.clients.jedis.Tuple> tuples = connection.getCluster().zpopmax(key, count);
+		return tuples.stream().map(redis.clients.jedis.Tuple::getBinaryElement).collect(Collectors.toSet());
 	}
 
 	/*

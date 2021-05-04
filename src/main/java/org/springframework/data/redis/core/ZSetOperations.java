@@ -589,12 +589,18 @@ public interface ZSetOperations<K, V> {
 	Set<V> reverseRangeByLex(K key, Range range, Limit limit);
 
 
-	/**
-	 * @param key
-	 * @return
-	 */
 	@Nullable
 	V popMax(K key);
+
+	@Nullable
+	Set<V> popMax(K key, int count);
+
+//	@Nullable
+//	TypedTuple<V> popMaxWithScore(K key);
+//
+//	@Nullable
+//	Set<TypedTuple<V>> popMaxWithScore(K key, int count);
+//
 
 	/**
 	 * @return never {@literal null}.

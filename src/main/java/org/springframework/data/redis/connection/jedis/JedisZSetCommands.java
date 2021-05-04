@@ -21,6 +21,7 @@ import redis.clients.jedis.params.ZAddParams;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.data.redis.connection.RedisZSetCommands;
 import org.springframework.data.redis.connection.RedisZSetCommands.ZAddArgs.Flag;
@@ -585,6 +586,16 @@ class JedisZSetCommands implements RedisZSetCommands {
 				.get(JedisConverters::toTuple);
 
 		return tuple == null ? null : tuple.getValue();
+	}
+
+	@Override
+	public Set<byte[]> zPopMax(byte[] key, int count) {
+		Assert.notNull(key, "Key must not be null!");
+		Assert.isTrue(count > 0, () -> "xx");
+
+		Set<Tuple> tuples = connection.invoke().from(BinaryJedis::zpopmax, MultiKeyPipelineBase::zpopmax, key, count).get(JedisConverters::toTupleSet);
+
+		return tuples.stream().map(tuple -> tuple.getValue()).collect(Collectors.toSet());
 	}
 
 	private boolean isPipelined() {

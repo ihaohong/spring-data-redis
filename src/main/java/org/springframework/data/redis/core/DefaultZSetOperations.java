@@ -547,4 +547,11 @@ class DefaultZSetOperations<K, V> extends AbstractOperations<K, V> implements ZS
 		return deserializeValue(rawValue);
 	}
 
+	@Override
+	public Set<V> popMax(K key, int count) {
+		byte[] rawKey = rawKey(key);
+		Set<byte[]> rawValues = execute(connection -> connection.zPopMax(rawKey, count), true);
+		return deserializeValues(rawValues);
+	}
+
 }
