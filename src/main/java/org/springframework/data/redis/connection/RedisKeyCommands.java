@@ -71,6 +71,14 @@ public interface RedisKeyCommands {
 	@Nullable
 	Long del(byte[]... keys);
 
+	/**
+	 * Copy given {@code sourceKey} to {@code targetKey}.
+	 *
+	 * @param sourceKey must not be {@literal null}.
+	 * @param targetKey must not be  {@literal null}.
+	 * @return
+	 * @see <a href="https://redis.io/commands/copy">Redis Documentation: COPY</a>
+	 */
 	@Nullable
 	Boolean copy(byte[] sourceKey, byte[] targetKey);
 

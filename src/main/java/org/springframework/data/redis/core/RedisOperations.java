@@ -199,6 +199,14 @@ public interface RedisOperations<K, V> {
 	@Nullable
 	Long delete(Collection<K> keys);
 
+	/**
+	 * Copy given {@code sourceKey} to {@code targetKey}.
+	 *
+	 * @param sourceKey must not be {@literal null}.
+	 * @param targetKey must not be {@literal null}.
+	 * @return
+	 * @see <a href="https://redis.io/commands/copy">Redis Documentation: COPY</a>
+	 */
 	@Nullable
 	Boolean copy(K sourceKey, K targetKey);
 
