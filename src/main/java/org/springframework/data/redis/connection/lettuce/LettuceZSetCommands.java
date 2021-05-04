@@ -22,6 +22,7 @@ import io.lettuce.core.ZStoreArgs;
 import io.lettuce.core.api.async.RedisSortedSetAsyncCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -558,7 +559,12 @@ class LettuceZSetCommands implements RedisZSetCommands {
 		Assert.isTrue(count > 0, "count must greater than 0!");
 
 		Set<Tuple> tuples = connection.invoke().from(RedisSortedSetAsyncCommands::zpopmax, key, count).get(LettuceConverters::toTupleSet);
-		return tuples.stream().map(Tuple::getValue).collect(Collectors.toSet());
+		Set<byte[]> tupleValues = new LinkedHashSet<>();
+		tuples.forEach(tuple -> {
+			tupleValues.add(tuple.getValue());
+		});
+
+		return tupleValues;
 	}
 
 	@Override

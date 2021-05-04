@@ -594,8 +594,12 @@ class JedisZSetCommands implements RedisZSetCommands {
 		Assert.isTrue(count > 0, () -> "count must greater than 0!");
 
 		Set<Tuple> tuples = connection.invoke().from(BinaryJedis::zpopmax, MultiKeyPipelineBase::zpopmax, key, count).get(JedisConverters::toTupleSet);
+		Set<byte[]> tupleValues = new LinkedHashSet<>();
+		tuples.forEach(tuple -> {
+			 tupleValues.add(tuple.getValue());
+		});
 
-		return tuples.stream().map(tuple -> tuple.getValue()).collect(Collectors.toSet());
+		return tupleValues;
 	}
 
 	@Override
