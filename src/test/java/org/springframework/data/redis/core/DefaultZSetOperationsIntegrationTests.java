@@ -20,10 +20,7 @@ import static org.assertj.core.api.Assumptions.*;
 import static org.assertj.core.data.Offset.offset;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.junit.jupiter.api.BeforeEach;
 
@@ -471,7 +468,7 @@ public class DefaultZSetOperationsIntegrationTests<K, V> {
 		assertThat(zSetOps.score(key1, value1)).isCloseTo(6.0, offset(0.1));
 	}
 
-	@ParameterizedRedisTest
+	@ParameterizedRedisTest // xx
 	void testZsetPopMax() {
 		K key1 = keyFactory.instance();
 		V value1 = valueFactory.instance();
@@ -485,4 +482,49 @@ public class DefaultZSetOperationsIntegrationTests<K, V> {
 		assertThat(zSetOps.popMax(key1)).isEqualTo(value2);
 	}
 
+	@ParameterizedRedisTest // xx
+	void testZsetPopMaxCount() {
+		K key1 = keyFactory.instance();
+		V value1 = valueFactory.instance();
+		V value2 = valueFactory.instance();
+		V value3 = valueFactory.instance();
+
+		zSetOps.add(key1, value1, 4.0);
+		zSetOps.add(key1, value2, 5.0);
+		zSetOps.add(key1, value3, 6.0);
+
+		LinkedHashSet<V> values = (LinkedHashSet) zSetOps.popMax(key1, 2);
+
+		assertThat(values).hasSize(2).containsSequence(value3, value2);
+	}
+
+	@ParameterizedRedisTest // xx
+	void testZsetPopMaxWithScore() {
+		K key1 = keyFactory.instance();
+		V value1 = valueFactory.instance();
+		V value2 = valueFactory.instance();
+
+		assertThat(zSetOps.popMaxWithScore(key1)).isNull();
+
+		zSetOps.add(key1, value1, 4.0);
+		zSetOps.add(key1, value2, 5.0);
+
+		assertThat(zSetOps.popMaxWithScore(key1)).isEqualTo(new DefaultTypedTuple<>(value2, 5.0));
+	}
+
+	@ParameterizedRedisTest // xx
+	void testZsetPopMaxWithScoreCount() {
+		K key1 = keyFactory.instance();
+		V value1 = valueFactory.instance();
+		V value2 = valueFactory.instance();
+		V value3 = valueFactory.instance();
+
+		zSetOps.add(key1, value1, 4.0);
+		zSetOps.add(key1, value2, 5.0);
+		zSetOps.add(key1, value3, 6.0);
+
+		LinkedHashSet<DefaultTypedTuple<V>> values = (LinkedHashSet) zSetOps.popMaxWithScore(key1, 2);
+
+		assertThat(values).hasSize(2).containsSequence(new DefaultTypedTuple<>(value3, 6.0), new DefaultTypedTuple<>(value2, 5.0));
+	}
 }

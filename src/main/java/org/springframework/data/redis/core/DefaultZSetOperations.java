@@ -558,7 +558,7 @@ class DefaultZSetOperations<K, V> extends AbstractOperations<K, V> implements ZS
 	public TypedTuple<V> popMaxWithScore(K key) {
 		byte[] rawKey = rawKey(key);
 		Tuple tuple = execute(connection -> connection.zPopMaxWithScore(rawKey), true);
-		return deserializeTuple(tuple);
+		return tuple == null ? null : deserializeTuple(tuple);
 	}
 
 	@Override
