@@ -433,6 +433,7 @@ class RedisConnectionUnitTests {
 			delegate.flushDb();
 		}
 
+		@Override
 		public Boolean sIsMember(byte[] key, byte[] value) {
 			return delegate.sIsMember(key, value);
 		}

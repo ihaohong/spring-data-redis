@@ -136,6 +136,15 @@ class JedisSetCommands implements RedisSetCommands {
 		return connection.invoke().just(BinaryJedis::sismember, MultiKeyPipelineBase::sismember, key, value);
 	}
 
+	@Override
+	public List<Boolean> sIsMember(byte[] key, byte[]... values) {
+
+		Assert.notNull(key, "Key must not be null!");
+		Assert.notEmpty(values, "Values must not be null!");
+
+		return connection.invoke().just(BinaryJedis::smismember, MultiKeyPipelineBase::smismember, key, values);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.redis.connection.RedisSetCommands#sMembers(byte[])

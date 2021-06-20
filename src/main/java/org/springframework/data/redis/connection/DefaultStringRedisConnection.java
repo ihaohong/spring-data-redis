@@ -1123,6 +1123,11 @@ public class DefaultStringRedisConnection implements StringRedisConnection, Deco
 		return convertAndReturn(delegate.sIsMember(key, value), Converters.identityConverter());
 	}
 
+	@Override
+	public List<Boolean> sIsMember(byte[] key, byte[]... values) {
+		return convertAndReturn(delegate.sIsMember(key, values), Converters.identityConverter());
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.redis.connection.RedisSetCommands#sMembers(byte[])
@@ -2529,6 +2534,11 @@ public class DefaultStringRedisConnection implements StringRedisConnection, Deco
 	@Override
 	public Boolean sIsMember(String key, String value) {
 		return sIsMember(serialize(key), serialize(value));
+	}
+
+	@Override
+	public List<Boolean> sIsMember(String key, String... values) {
+		return sIsMember(serialize(key), serializeMulti(values));
 	}
 
 	/*

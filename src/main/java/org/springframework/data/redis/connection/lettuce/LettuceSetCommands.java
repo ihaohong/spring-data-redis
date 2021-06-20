@@ -137,6 +137,15 @@ class LettuceSetCommands implements RedisSetCommands {
 		return connection.invoke().just(RedisSetAsyncCommands::sismember, key, value);
 	}
 
+	@Override
+	public List<Boolean> sIsMember(byte[] key, byte[]... values) {
+
+		Assert.notNull(key, "Key must not be null!");
+		Assert.notNull(values, "Values must not be null!");
+
+		return connection.invoke().just(RedisSetAsyncCommands::smismember, key, values);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.redis.connection.RedisSetCommands#sMembers(byte[])

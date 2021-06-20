@@ -108,6 +108,10 @@ public interface SetOperations<K, V> {
 	@Nullable
 	Boolean isMember(K key, Object o);
 
+
+	@Nullable
+	List<Boolean> isMember(K key, Object... o);
+
 	/**
 	 * Returns the members intersecting all given sets at {@code key} and {@code otherKey}.
 	 *

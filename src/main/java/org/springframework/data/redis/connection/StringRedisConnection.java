@@ -1020,6 +1020,8 @@ public interface StringRedisConnection extends RedisConnection {
 	 */
 	Boolean sIsMember(String key, String value);
 
+	List<Boolean> sIsMember(String key, String... values);
+
 	/**
 	 * Returns the members intersecting all given sets at {@code keys}.
 	 *

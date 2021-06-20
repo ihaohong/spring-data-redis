@@ -88,6 +88,9 @@ public interface BoundSetOperations<K, V> extends BoundKeyOperations<K> {
 	@Nullable
 	Boolean isMember(Object o);
 
+	@Nullable
+	List<Boolean> isMember(Object... o);
+
 	/**
 	 * Returns the members intersecting all given sets at the bound key and {@code key}.
 	 *

@@ -108,6 +108,9 @@ public interface RedisSetCommands {
 	@Nullable
 	Boolean sIsMember(byte[] key, byte[] value);
 
+	@Nullable
+	List<Boolean> sIsMember(byte[] key, byte[]... values);
+
 	/**
 	 * Returns the members intersecting all given sets at {@code keys}.
 	 *
