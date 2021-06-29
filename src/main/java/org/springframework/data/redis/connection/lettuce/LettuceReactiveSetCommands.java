@@ -16,13 +16,17 @@
 package org.springframework.data.redis.connection.lettuce;
 
 import io.lettuce.core.ScanStream;
+import org.springframework.data.redis.connection.ReactiveRedisConnection;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.reactivestreams.Publisher;
 import org.springframework.data.redis.connection.ReactiveRedisConnection.BooleanResponse;
+import org.springframework.data.redis.connection.ReactiveRedisConnection.MultiValueResponse;
 import org.springframework.data.redis.connection.ReactiveRedisConnection.ByteBufferResponse;
 import org.springframework.data.redis.connection.ReactiveRedisConnection.CommandResponse;
 import org.springframework.data.redis.connection.ReactiveRedisConnection.KeyCommand;
@@ -160,6 +164,15 @@ class LettuceReactiveSetCommands implements ReactiveSetCommands {
 			Assert.notNull(command.getValue(), "Value must not be null!");
 
 			return cmd.sismember(command.getKey(), command.getValue()).map(value -> new BooleanResponse<>(command, value));
+		}));
+	}
+
+	@Override
+	public Flux<ReactiveRedisConnection.MultiValueResponse<SMIsMemberCommand, Boolean>> sMIsMember(Publisher<SMIsMemberCommand> commands) {
+		return connection.execute(cmd -> Flux.from(commands).concatMap(command -> {
+			Assert.notNull(command.getKey(), "Key must not be null!");
+
+			return cmd.smismember(command.getKey(), command.getValues()).map(values -> new MultiValueResponse<>(command, Arrays.asList(values)));
 		}));
 	}
 

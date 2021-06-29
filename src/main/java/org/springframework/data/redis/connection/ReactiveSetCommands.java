@@ -27,6 +27,7 @@ import java.util.Optional;
 
 import org.reactivestreams.Publisher;
 import org.springframework.data.redis.connection.ReactiveRedisConnection.BooleanResponse;
+import org.springframework.data.redis.connection.ReactiveRedisConnection.MultiValueResponse;
 import org.springframework.data.redis.connection.ReactiveRedisConnection.ByteBufferResponse;
 import org.springframework.data.redis.connection.ReactiveRedisConnection.Command;
 import org.springframework.data.redis.connection.ReactiveRedisConnection.CommandResponse;
@@ -529,6 +530,36 @@ public interface ReactiveSetCommands {
 		}
 	}
 
+	class SMIsMemberCommand extends KeyCommand {
+
+		private final ByteBuffer[] values;
+
+		private SMIsMemberCommand(@Nullable ByteBuffer key, ByteBuffer... values) {
+
+			super(key);
+
+			this.values = values;
+		}
+
+		public static SMIsMemberCommand values(ByteBuffer... values) {
+
+			Assert.notNull(values, "Value must not be null!");
+
+			return new SMIsMemberCommand(null, values);
+		}
+
+		public SMIsMemberCommand of(ByteBuffer set) {
+
+			Assert.notNull(set, "Set key must not be null!");
+
+			return new SMIsMemberCommand(set, values);
+		}
+
+		public ByteBuffer[] getValues() {
+			return values;
+		}
+	}
+
 	/**
 	 * Check if set at {@literal key} contains {@literal value}.
 	 *
@@ -553,6 +584,12 @@ public interface ReactiveSetCommands {
 	 * @see <a href="https://redis.io/commands/sismember">Redis Documentation: SISMEMBER</a>
 	 */
 	Flux<BooleanResponse<SIsMemberCommand>> sIsMember(Publisher<SIsMemberCommand> commands);
+
+	default Mono<List<Boolean>> sIsMember(ByteBuffer key, ByteBuffer... values) {
+		return sMIsMember(Mono.just(SMIsMemberCommand.values(values).of(key))).next().map(MultiValueResponse::getOutput);
+	}
+
+	Flux<MultiValueResponse<SMIsMemberCommand, Boolean>> sMIsMember(Publisher<SMIsMemberCommand> commands);
 
 	/**
 	 * {@code SINTER} command parameters.

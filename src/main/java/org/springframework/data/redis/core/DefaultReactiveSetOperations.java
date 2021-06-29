@@ -151,6 +151,14 @@ class DefaultReactiveSetOperations<K, V> implements ReactiveSetOperations<K, V> 
 		return createMono(connection -> connection.sIsMember(rawKey(key), rawValue((V) o)));
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public Mono<List<Boolean>> isMember(K key, Object... o) {
+		Assert.notNull(key, "Key must not be null!");
+
+		return createMono(connection -> connection.sIsMember(rawKey(key), rawValues((V) o)));
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.redis.core.ReactiveSetOperations#intersect(java.lang.Object, java.lang.Object)
@@ -511,6 +519,17 @@ class DefaultReactiveSetOperations<K, V> implements ReactiveSetOperations<K, V> 
 
 	private ByteBuffer rawValue(V value) {
 		return serializationContext.getValueSerializationPair().write(value);
+	}
+
+	private ByteBuffer[] rawValues(V... values) {
+
+		ByteBuffer[] rawValues = new ByteBuffer[values.length];
+		int i = 0;
+		for (V value : values) {
+			rawValues[i++] = rawValue(value);
+		}
+
+		return rawValues;
 	}
 
 	private V readValue(ByteBuffer buffer) {
