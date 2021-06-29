@@ -1582,6 +1582,15 @@ public abstract class AbstractConnectionIntegrationTests {
 	}
 
 	@Test
+	void testSMIsMember() {
+		actual.add(connection.sAdd("myset", "foo"));
+		actual.add(connection.sAdd("myset", "bar"));
+		actual.add(connection.sIsMember("myset", "foo", "bar"));
+		actual.add(connection.sIsMember("myset", "foo", "bar2"));
+		verifyResults(Arrays.asList(new Object[] { 1L, 1L, Arrays.asList(true, true), Arrays.asList(true, false) }));
+	}
+
+	@Test
 	void testSMove() {
 		actual.add(connection.sAdd("myset", "foo"));
 		actual.add(connection.sAdd("myset", "bar"));
