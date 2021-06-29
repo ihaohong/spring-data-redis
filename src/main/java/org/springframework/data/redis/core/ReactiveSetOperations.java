@@ -101,7 +101,7 @@ public interface ReactiveSetOperations<K, V> {
 	 */
 	Mono<Boolean> isMember(K key, Object o);
 
-	Mono<List<Boolean>> isMember(K key, Object... o);
+	Flux<Boolean> isMember(K key, Object... values);
 
 	/**
 	 * Returns the members intersecting all given sets at {@code key} and {@code otherKey}.

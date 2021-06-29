@@ -153,10 +153,12 @@ class DefaultReactiveSetOperations<K, V> implements ReactiveSetOperations<K, V> 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Mono<List<Boolean>> isMember(K key, Object... o) {
+	public Flux<Boolean> isMember(K key, Object... values) {
 		Assert.notNull(key, "Key must not be null!");
 
-		return createMono(connection -> connection.sIsMember(rawKey(key), rawValues((V) o)));
+		return createFlux(connection -> Flux.fromArray(values)
+				.map(v -> this.rawValue((V) v))
+				.flatMap(serialized -> connection.sIsMember(rawKey(key), serialized)));
 	}
 
 	/*
@@ -519,17 +521,6 @@ class DefaultReactiveSetOperations<K, V> implements ReactiveSetOperations<K, V> 
 
 	private ByteBuffer rawValue(V value) {
 		return serializationContext.getValueSerializationPair().write(value);
-	}
-
-	private ByteBuffer[] rawValues(V... values) {
-
-		ByteBuffer[] rawValues = new ByteBuffer[values.length];
-		int i = 0;
-		for (V value : values) {
-			rawValues[i++] = rawValue(value);
-		}
-
-		return rawValues;
 	}
 
 	private V readValue(ByteBuffer buffer) {

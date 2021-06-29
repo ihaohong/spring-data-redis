@@ -168,11 +168,12 @@ class LettuceReactiveSetCommands implements ReactiveSetCommands {
 	}
 
 	@Override
-	public Flux<ReactiveRedisConnection.MultiValueResponse<SMIsMemberCommand, Boolean>> sMIsMember(Publisher<SMIsMemberCommand> commands) {
+	public Flux<CommandResponse<SMIsMemberCommand, Flux<Boolean>>> sMIsMember(Publisher<SMIsMemberCommand> commands) {
 		return connection.execute(cmd -> Flux.from(commands).concatMap(command -> {
 			Assert.notNull(command.getKey(), "Key must not be null!");
 
-			return cmd.smismember(command.getKey(), command.getValues()).map(values -> new MultiValueResponse<>(command, Arrays.asList(values)));
+			Flux<Boolean> result = cmd.smismember(command.getKey(), command.getValues().toArray(new ByteBuffer[0]));
+			return Mono.just(new CommandResponse<>(command, result));
 		}));
 	}
 

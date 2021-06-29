@@ -27,7 +27,6 @@ import java.util.Optional;
 
 import org.reactivestreams.Publisher;
 import org.springframework.data.redis.connection.ReactiveRedisConnection.BooleanResponse;
-import org.springframework.data.redis.connection.ReactiveRedisConnection.MultiValueResponse;
 import org.springframework.data.redis.connection.ReactiveRedisConnection.ByteBufferResponse;
 import org.springframework.data.redis.connection.ReactiveRedisConnection.Command;
 import org.springframework.data.redis.connection.ReactiveRedisConnection.CommandResponse;
@@ -532,20 +531,20 @@ public interface ReactiveSetCommands {
 
 	class SMIsMemberCommand extends KeyCommand {
 
-		private final ByteBuffer[] values;
+		private final List<ByteBuffer> values;
 
-		private SMIsMemberCommand(@Nullable ByteBuffer key, ByteBuffer... values) {
+		private SMIsMemberCommand(@Nullable ByteBuffer key, List<ByteBuffer> values) {
 
 			super(key);
 
 			this.values = values;
 		}
 
-		public static SMIsMemberCommand values(ByteBuffer... values) {
+		public static SMIsMemberCommand values(Collection<ByteBuffer> values) {
 
 			Assert.notNull(values, "Value must not be null!");
 
-			return new SMIsMemberCommand(null, values);
+			return new SMIsMemberCommand(null, new ArrayList<>(values));
 		}
 
 		public SMIsMemberCommand of(ByteBuffer set) {
@@ -555,7 +554,7 @@ public interface ReactiveSetCommands {
 			return new SMIsMemberCommand(set, values);
 		}
 
-		public ByteBuffer[] getValues() {
+		public List<ByteBuffer> getValues() {
 			return values;
 		}
 	}
@@ -585,11 +584,11 @@ public interface ReactiveSetCommands {
 	 */
 	Flux<BooleanResponse<SIsMemberCommand>> sIsMember(Publisher<SIsMemberCommand> commands);
 
-	default Mono<List<Boolean>> sIsMember(ByteBuffer key, ByteBuffer... values) {
-		return sMIsMember(Mono.just(SMIsMemberCommand.values(values).of(key))).next().map(MultiValueResponse::getOutput);
+	default Flux<Boolean> sIsMember(ByteBuffer key, Collection<ByteBuffer> values) {
+		return sMIsMember(Mono.just(SMIsMemberCommand.values(values).of(key))).flatMap(CommandResponse::getOutput);
 	}
 
-	Flux<MultiValueResponse<SMIsMemberCommand, Boolean>> sMIsMember(Publisher<SMIsMemberCommand> commands);
+	Flux<CommandResponse<SMIsMemberCommand, Flux<Boolean>>> sMIsMember(Publisher<SMIsMemberCommand> commands);
 
 	/**
 	 * {@code SINTER} command parameters.
