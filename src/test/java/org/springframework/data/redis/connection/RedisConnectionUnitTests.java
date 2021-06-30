@@ -47,6 +47,7 @@ import org.springframework.util.ObjectUtils;
  * @author David Liu
  * @author Ninad Divadkar
  * @author Mark Paluch
+ * @author ihaohong
  */
 class RedisConnectionUnitTests {
 

@@ -27,6 +27,8 @@ import java.util.List;
  * @author Mark Paluch
  * @author Christoph Strobl
  * @author Roman Bezpalko
+ * @author ihaohong
+ *
  * @see <a href="https://redis.io/commands#set">Redis Documentation: Set Commands</a>
  * @since 2.0
  */

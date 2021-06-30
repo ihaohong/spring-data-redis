@@ -96,6 +96,7 @@ import org.springframework.data.redis.test.util.HexStringUtils;
  * @author Tugdual Grall
  * @author Dejan Jankov
  * @author Andrey Shlykov
+ * @author ihaohong
  */
 public abstract class AbstractConnectionIntegrationTests {
 
