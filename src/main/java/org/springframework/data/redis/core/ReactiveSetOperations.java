@@ -103,6 +103,14 @@ public interface ReactiveSetOperations<K, V> {
 	 */
 	Mono<Boolean> isMember(K key, Object o);
 
+	/**
+	 * Check if set at {@code key} contains {@code value}.
+	 *
+	 * @param key must not be {@literal null}.
+	 * @param values
+	 * @return
+	 * @see <a href="https://redis.io/commands/smismember">Redis Documentation: SMISMEMBER</a>
+	 */
 	Flux<Boolean> isMember(K key, Object... values);
 
 	/**

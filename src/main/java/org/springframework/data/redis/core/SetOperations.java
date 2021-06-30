@@ -109,7 +109,14 @@ public interface SetOperations<K, V> {
 	@Nullable
 	Boolean isMember(K key, Object o);
 
-
+	/**
+	 * Check if set at {@code key} contains {@code value}.
+	 *
+	 * @param key must not be {@literal null}.
+	 * @param o
+	 * @return {@literal null} when used in pipeline / transaction.
+	 * @see <a href="https://redis.io/commands/smismember">Redis Documentation: SMISMEMBER</a>
+	 */
 	@Nullable
 	List<Boolean> isMember(K key, Object... o);
 

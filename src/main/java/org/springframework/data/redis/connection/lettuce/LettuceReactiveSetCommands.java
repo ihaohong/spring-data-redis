@@ -168,6 +168,10 @@ class LettuceReactiveSetCommands implements ReactiveSetCommands {
 		}));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.redis.connection.ReactiveSetCommands#sIsMember(org.reactivestreams.Publisher)
+	 */
 	@Override
 	public Flux<CommandResponse<SMIsMemberCommand, Flux<Boolean>>> sMIsMember(Publisher<SMIsMemberCommand> commands) {
 		return connection.execute(cmd -> Flux.from(commands).concatMap(command -> {

@@ -144,6 +144,10 @@ class DefaultBoundSetOperations<K, V> extends DefaultBoundKeyOperations<K> imple
 		return ops.isMember(getKey(), o);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.redis.core.BoundSetOperations#isMember(java.lang.Object...)
+	 */
 	@Override
 	public List<Boolean> isMember(Object... o) {
 		return ops.isMember(getKey(), o);

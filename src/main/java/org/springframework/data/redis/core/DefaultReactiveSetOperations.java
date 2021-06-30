@@ -153,6 +153,10 @@ class DefaultReactiveSetOperations<K, V> implements ReactiveSetOperations<K, V> 
 		return createMono(connection -> connection.sIsMember(rawKey(key), rawValue((V) o)));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.redis.core.ReactiveSetOperations#isMember(java.lang.Object, java.lang.Object...)
+	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public Flux<Boolean> isMember(K key, Object... values) {

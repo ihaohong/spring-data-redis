@@ -109,6 +109,14 @@ public interface RedisSetCommands {
 	@Nullable
 	Boolean sIsMember(byte[] key, byte[] value);
 
+	/**
+	 * Check if set at {@code key} contains {@code value}.
+	 *
+	 * @param key must not be {@literal null}.
+	 * @param values must not be {@literal empty} nor contain {@literal null} values.
+	 * @return {@literal null} when used in pipeline / transaction.
+	 * @see <a href="https://redis.io/commands/smismember">Redis Documentation: SMISMEMBER</a>
+	 */
 	@Nullable
 	List<Boolean> sIsMember(byte[] key, byte[]... values);
 

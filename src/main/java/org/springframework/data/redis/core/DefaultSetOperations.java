@@ -205,6 +205,10 @@ class DefaultSetOperations<K, V> extends AbstractOperations<K, V> implements Set
 		return execute(connection -> connection.sIsMember(rawKey, rawValue), true);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.redis.core.SetOperations#isMember(java.lang.Object, java.lang.Object...)
+	 */
 	@Override
 	public List<Boolean> isMember(K key, Object... o) {
 		byte[] rawKey = rawKey(key);

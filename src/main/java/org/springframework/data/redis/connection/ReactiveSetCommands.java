@@ -547,6 +547,12 @@ public interface ReactiveSetCommands {
 			this.values = values;
 		}
 
+		/**
+		 * Creates a new {@link SMIsMemberCommand} given a {@literal value}.
+		 *
+		 * @param values must not be {@literal empty} nor contain {@literal null} values.
+		 * @return
+		 */
 		public static SMIsMemberCommand values(Collection<ByteBuffer> values) {
 
 			Assert.notNull(values, "Value must not be null!");
@@ -554,6 +560,12 @@ public interface ReactiveSetCommands {
 			return new SMIsMemberCommand(null, new ArrayList<>(values));
 		}
 
+		/**
+		 * Applies the {@literal set} key. Constructs a new command instance with all previously configured properties.
+		 *
+		 * @param set must not be {@literal null}.
+		 * @return a new {@link SMIsMemberCommand} with {@literal set} applied.
+		 */
 		public SMIsMemberCommand of(ByteBuffer set) {
 
 			Assert.notNull(set, "Set key must not be null!");
@@ -591,10 +603,25 @@ public interface ReactiveSetCommands {
 	 */
 	Flux<BooleanResponse<SIsMemberCommand>> sIsMember(Publisher<SIsMemberCommand> commands);
 
+	/**
+	 * Check if set at {@literal key} contains {@literal values}.
+	 *
+	 * @param key must not be {@literal null}.
+	 * @param values must not be {@literal empty} nor contain {@literal null} values.
+	 * @return
+	 * @see <a href="https://redis.io/commands/smismember">Redis Documentation: SMISMEMBER</a>
+	 */
 	default Flux<Boolean> sIsMember(ByteBuffer key, Collection<ByteBuffer> values) {
 		return sMIsMember(Mono.just(SMIsMemberCommand.values(values).of(key))).flatMap(CommandResponse::getOutput);
 	}
 
+	/**
+	 * Check if set at {@link SMIsMemberCommand#getKey()} contains {@link SMIsMemberCommand#getKey()}.
+	 *
+	 * @param commands must not be {@literal null}.
+	 * @return
+	 * @see <a href="https://redis.io/commands/smismember">Redis Documentation: SMISMEMBER</a>
+	 */
 	Flux<CommandResponse<SMIsMemberCommand, Flux<Boolean>>> sMIsMember(Publisher<SMIsMemberCommand> commands);
 
 	/**
