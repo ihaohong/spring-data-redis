@@ -529,6 +529,12 @@ public interface ReactiveSetCommands {
 		}
 	}
 
+	/**
+	 * {@code SMISMEMBER} command parameters.
+	 *
+	 * @author Christoph Strobl
+	 * @see <a href="https://redis.io/commands/smismember">Redis Documentation: SMISMEMBER</a>
+	 */
 	class SMIsMemberCommand extends KeyCommand {
 
 		private final List<ByteBuffer> values;

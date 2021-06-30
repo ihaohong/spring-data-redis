@@ -821,6 +821,7 @@ public interface DefaultedRedisConnection extends RedisConnection {
 		return setCommands().sIsMember(key, value);
 	}
 
+	/** @deprecated in favor of {@link RedisConnection#setCommands()}}. */
 	@Override
 	@Deprecated
 	default List<Boolean> sIsMember(byte[] key, byte[]... values) {
