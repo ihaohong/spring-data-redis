@@ -176,6 +176,8 @@ class LettuceReactiveSetCommands implements ReactiveSetCommands {
 	public Flux<CommandResponse<SMIsMemberCommand, Flux<Boolean>>> sMIsMember(Publisher<SMIsMemberCommand> commands) {
 		return connection.execute(cmd -> Flux.from(commands).concatMap(command -> {
 			Assert.notNull(command.getKey(), "Key must not be null!");
+			Assert.notEmpty(command.getValues(), "Values must not be 'null' or empty.");
+			Assert.noNullElements(command.getValues(), "Values must not contain 'null' value.");
 
 			Flux<Boolean> result = cmd.smismember(command.getKey(), command.getValues().toArray(new ByteBuffer[0]));
 			return Mono.just(new CommandResponse<>(command, result));

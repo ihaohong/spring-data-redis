@@ -555,7 +555,8 @@ public interface ReactiveSetCommands {
 		 */
 		public static SMIsMemberCommand values(Collection<ByteBuffer> values) {
 
-			Assert.notNull(values, "Value must not be null!");
+			Assert.notEmpty(values, "Values must not be 'null' or empty.");
+			Assert.noNullElements(values.toArray(), "Values must not contain 'null' value.");
 
 			return new SMIsMemberCommand(null, new ArrayList<>(values));
 		}

@@ -187,6 +187,7 @@ class JedisClusterSetCommands implements RedisSetCommands {
 
 		Assert.notNull(key, "Key must not be null!");
 		Assert.notEmpty(values, "Values must not be empty");
+		Assert.noNullElements(values, "Values must not contain 'null' value.");
 
 		try {
 			return connection.getCluster().smismember(key, values);

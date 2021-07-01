@@ -161,6 +161,8 @@ class DefaultReactiveSetOperations<K, V> implements ReactiveSetOperations<K, V> 
 	@SuppressWarnings("unchecked")
 	public Flux<Boolean> isMember(K key, Object... values) {
 		Assert.notNull(key, "Key must not be null!");
+		Assert.notEmpty(values, "Values must not be 'null' or empty.");
+		Assert.noNullElements(values, "Values must not contain 'null' value.");
 
 		return createFlux(connection -> Flux.fromArray(values)
 				.map(v -> this.rawValue((V) v))
