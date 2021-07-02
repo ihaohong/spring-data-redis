@@ -1029,13 +1029,6 @@ public class DefaultStringRedisConnectionTests {
 	}
 
 	@Test
-	public void testSMIsMemberBytes() {
-		doReturn(Arrays.asList(true, true)).when(nativeConnection).sIsMember(fooBytes, barBytes, bar2Bytes);
-		actual.add(connection.sIsMember(fooBytes, barBytes, bar2Bytes));
-		verifyResults(Collections.singletonList(Arrays.asList(true, true)));
-	}
-
-	@Test
 	public void testSIsMember() {
 		doReturn(true).when(nativeConnection).sIsMember(fooBytes, barBytes);
 		actual.add(connection.sIsMember(foo, bar));
@@ -1043,9 +1036,16 @@ public class DefaultStringRedisConnectionTests {
 	}
 
 	@Test
-	public void testSMIsMember() {
+	public void testSMIsMemberBytes() {
 		doReturn(Arrays.asList(true, true)).when(nativeConnection).sIsMember(fooBytes, barBytes, bar2Bytes);
 		actual.add(connection.sIsMember(fooBytes, barBytes, bar2Bytes));
+		verifyResults(Collections.singletonList(Arrays.asList(true, true)));
+	}
+
+	@Test
+	public void testSMIsMember() {
+		doReturn(Arrays.asList(true, true)).when(nativeConnection).sIsMember(fooBytes, barBytes, bar2Bytes);
+		actual.add(connection.sIsMember(foo, bar, bar2));
 		verifyResults(Collections.singletonList(Arrays.asList(true, true)));
 	}
 

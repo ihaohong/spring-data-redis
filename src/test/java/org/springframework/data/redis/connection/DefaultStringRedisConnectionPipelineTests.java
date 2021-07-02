@@ -831,6 +831,18 @@ public class DefaultStringRedisConnectionPipelineTests extends DefaultStringRedi
 	}
 
 	@Test
+	public void testSMIsMemberBytes() {
+		doReturn(Collections.singletonList(Arrays.asList(true, true))).when(nativeConnection).closePipeline();
+		super.testSMIsMemberBytes();
+	}
+
+	@Test
+	public void testSMIsMember() {
+		doReturn(Collections.singletonList(Arrays.asList(true, true))).when(nativeConnection).closePipeline();
+		super.testSMIsMember();
+	}
+
+	@Test
 	public void testSMembersBytes() {
 		doReturn(Collections.singletonList(bytesSet)).when(nativeConnection).closePipeline();
 		super.testSMembersBytes();
