@@ -38,6 +38,7 @@ import org.springframework.data.redis.connection.stream.StreamRecords;
  * @author Ninad Divadkar
  * @author Mark Paluch
  * @author dengliming
+ * @author ihaohong
  */
 public class DefaultStringRedisConnectionPipelineTests extends DefaultStringRedisConnectionTests {
 
