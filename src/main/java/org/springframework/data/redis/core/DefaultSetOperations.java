@@ -17,6 +17,7 @@ package org.springframework.data.redis.core;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +32,7 @@ import org.springframework.util.Assert;
  * @author Christoph Strobl
  * @author Mark Paluch
  * @author Roman Bezpalko
+ * @author ihaohong
  */
 class DefaultSetOperations<K, V> extends AbstractOperations<K, V> implements SetOperations<K, V> {
 
@@ -201,6 +203,18 @@ class DefaultSetOperations<K, V> extends AbstractOperations<K, V> implements Set
 		byte[] rawValue = rawValue(o);
 
 		return execute(connection -> connection.sIsMember(rawKey, rawValue), true);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.redis.core.SetOperations#isMember(java.lang.Object, java.lang.Object...)
+	 */
+	@Override
+	public List<Boolean> isMember(K key, Object... o) {
+		byte[] rawKey = rawKey(key);
+		byte[][] rawValues = rawValues(o);
+
+		return execute(connection -> connection.sIsMember(rawKey, rawValues), true);
 	}
 
 	/*

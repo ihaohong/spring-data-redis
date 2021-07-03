@@ -36,6 +36,8 @@ import org.springframework.util.Assert;
  * @author Mark Paluch
  * @author Christoph Strobl
  * @author Roman Bezpalko
+ * @author ihaohong
+ *
  * @since 2.0
  */
 class DefaultReactiveSetOperations<K, V> implements ReactiveSetOperations<K, V> {
@@ -149,6 +151,22 @@ class DefaultReactiveSetOperations<K, V> implements ReactiveSetOperations<K, V> 
 		Assert.notNull(key, "Key must not be null!");
 
 		return createMono(connection -> connection.sIsMember(rawKey(key), rawValue((V) o)));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.redis.core.ReactiveSetOperations#isMember(java.lang.Object, java.lang.Object...)
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public Flux<Boolean> isMember(K key, Object... values) {
+		Assert.notNull(key, "Key must not be null!");
+		Assert.notEmpty(values, "Values must not be 'null' or empty.");
+		Assert.noNullElements(values, "Values must not contain 'null' value.");
+
+		return createFlux(connection -> Flux.fromArray(values)
+				.map(v -> this.rawValue((V) v))
+				.flatMap(serialized -> connection.sIsMember(rawKey(key), serialized)));
 	}
 
 	/*

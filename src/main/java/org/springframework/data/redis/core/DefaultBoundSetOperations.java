@@ -27,6 +27,7 @@ import org.springframework.data.redis.connection.DataType;
  *
  * @author Costin Leau
  * @author Christoph Strobl
+ * @author ihaohong
  */
 class DefaultBoundSetOperations<K, V> extends DefaultBoundKeyOperations<K> implements BoundSetOperations<K, V> {
 
@@ -140,6 +141,15 @@ class DefaultBoundSetOperations<K, V> extends DefaultBoundKeyOperations<K> imple
 	 */
 	@Override
 	public Boolean isMember(Object o) {
+		return ops.isMember(getKey(), o);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.redis.core.BoundSetOperations#isMember(java.lang.Object...)
+	 */
+	@Override
+	public List<Boolean> isMember(Object... o) {
 		return ops.isMember(getKey(), o);
 	}
 

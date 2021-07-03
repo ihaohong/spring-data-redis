@@ -26,6 +26,7 @@ import org.springframework.lang.Nullable;
  *
  * @author Costin Leau
  * @author Mark Paluch
+ * @author ihaohong
  */
 public interface BoundSetOperations<K, V> extends BoundKeyOperations<K> {
 
@@ -87,6 +88,16 @@ public interface BoundSetOperations<K, V> extends BoundKeyOperations<K> {
 	 */
 	@Nullable
 	Boolean isMember(Object o);
+
+	/**
+	 * Check if set at the bound key contains {@code value}.
+	 *
+	 * @param o
+	 * @return {@literal null} when used in pipeline / transaction.
+	 * @see <a href="https://redis.io/commands/smismember">Redis Documentation: SMISMEMBER</a>
+	 */
+	@Nullable
+	List<Boolean> isMember(Object... o);
 
 	/**
 	 * Returns the members intersecting all given sets at the bound key and {@code key}.

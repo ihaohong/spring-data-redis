@@ -16,13 +16,17 @@
 package org.springframework.data.redis.connection.lettuce;
 
 import io.lettuce.core.ScanStream;
+import org.springframework.data.redis.connection.ReactiveRedisConnection;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.reactivestreams.Publisher;
 import org.springframework.data.redis.connection.ReactiveRedisConnection.BooleanResponse;
+import org.springframework.data.redis.connection.ReactiveRedisConnection.MultiValueResponse;
 import org.springframework.data.redis.connection.ReactiveRedisConnection.ByteBufferResponse;
 import org.springframework.data.redis.connection.ReactiveRedisConnection.CommandResponse;
 import org.springframework.data.redis.connection.ReactiveRedisConnection.KeyCommand;
@@ -34,6 +38,7 @@ import org.springframework.util.Assert;
 /**
  * @author Christoph Strobl
  * @author Mark Paluch
+ * @author ihaohong
  * @since 2.0
  */
 class LettuceReactiveSetCommands implements ReactiveSetCommands {
@@ -160,6 +165,22 @@ class LettuceReactiveSetCommands implements ReactiveSetCommands {
 			Assert.notNull(command.getValue(), "Value must not be null!");
 
 			return cmd.sismember(command.getKey(), command.getValue()).map(value -> new BooleanResponse<>(command, value));
+		}));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.redis.connection.ReactiveSetCommands#sIsMember(org.reactivestreams.Publisher)
+	 */
+	@Override
+	public Flux<CommandResponse<SMIsMemberCommand, Flux<Boolean>>> sMIsMember(Publisher<SMIsMemberCommand> commands) {
+		return connection.execute(cmd -> Flux.from(commands).concatMap(command -> {
+			Assert.notNull(command.getKey(), "Key must not be null!");
+			Assert.notEmpty(command.getValues(), "Values must not be 'null' or empty.");
+			Assert.noNullElements(command.getValues(), "Values must not contain 'null' value.");
+
+			Flux<Boolean> result = cmd.smismember(command.getKey(), command.getValues().toArray(new ByteBuffer[0]));
+			return Mono.just(new CommandResponse<>(command, result));
 		}));
 	}
 

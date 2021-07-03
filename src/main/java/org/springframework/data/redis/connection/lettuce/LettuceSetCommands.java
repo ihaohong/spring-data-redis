@@ -34,6 +34,7 @@ import org.springframework.util.Assert;
 /**
  * @author Christoph Strobl
  * @author Mark Paluch
+ * @author ihaohong
  * @since 2.0
  */
 class LettuceSetCommands implements RedisSetCommands {
@@ -135,6 +136,20 @@ class LettuceSetCommands implements RedisSetCommands {
 		Assert.notNull(value, "Value must not be null!");
 
 		return connection.invoke().just(RedisSetAsyncCommands::sismember, key, value);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.redis.connection.RedisSetCommands#sIsMember(byte[], byte[]...)
+	 */
+	@Override
+	public List<Boolean> sIsMember(byte[] key, byte[]... values) {
+
+		Assert.notNull(key, "Key must not be null!");
+		Assert.notEmpty(values, "Values must not be null!");
+		Assert.noNullElements(values, "Values must not contain 'null' value.");
+
+		return connection.invoke().just(RedisSetAsyncCommands::smismember, key, values);
 	}
 
 	/*

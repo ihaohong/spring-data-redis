@@ -47,6 +47,7 @@ import org.springframework.util.ObjectUtils;
  * @author David Liu
  * @author Ninad Divadkar
  * @author Mark Paluch
+ * @author ihaohong
  */
 class RedisConnectionUnitTests {
 
@@ -433,6 +434,7 @@ class RedisConnectionUnitTests {
 			delegate.flushDb();
 		}
 
+		@Override
 		public Boolean sIsMember(byte[] key, byte[] value) {
 			return delegate.sIsMember(key, value);
 		}
