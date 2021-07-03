@@ -34,6 +34,7 @@ import org.springframework.data.redis.connection.stream.StreamRecords;
  * @author Jennifer Hickey
  * @author Christoph Strobl
  * @author Ninad Divadkar
+ * @author ihaohong
  */
 public class DefaultStringRedisConnectionTxTests extends DefaultStringRedisConnectionTests {
 
@@ -813,6 +814,18 @@ public class DefaultStringRedisConnectionTxTests extends DefaultStringRedisConne
 	public void testSIsMember() {
 		doReturn(Collections.singletonList(true)).when(nativeConnection).exec();
 		super.testSIsMember();
+	}
+
+	@Test
+	public void testSMIsMemberBytes() {
+		doReturn(Collections.singletonList(Arrays.asList(true, true))).when(nativeConnection).exec();
+		super.testSMIsMemberBytes();
+	}
+
+	@Test
+	public void testSMIsMember() {
+		doReturn(Collections.singletonList(Arrays.asList(true, true))).when(nativeConnection).exec();
+		super.testSMIsMember();
 	}
 
 	@Test
