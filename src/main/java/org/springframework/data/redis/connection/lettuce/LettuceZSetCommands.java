@@ -22,8 +22,10 @@ import io.lettuce.core.ZStoreArgs;
 import io.lettuce.core.api.async.RedisSortedSetAsyncCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.data.redis.connection.RedisZSetCommands;
 import org.springframework.data.redis.connection.RedisZSetCommands.ZAddArgs.Flag;
@@ -541,6 +543,43 @@ class LettuceZSetCommands implements RedisZSetCommands {
 
 		return connection.invoke().fromMany(RedisSortedSetAsyncCommands::zrevrangebylex, key,
 				LettuceConverters.<byte[]> toRange(range, true), LettuceConverters.toLimit(limit)).toSet();
+	}
+
+	@Override
+	public byte[] zPopMax(byte[] key) {
+		Assert.notNull(key, "Key must not be null!");
+
+		Tuple tuple = connection.invoke().from(RedisSortedSetAsyncCommands::zpopmax, key).get(LettuceConverters::toTuple);
+		return tuple.getValue();
+	}
+
+	@Override
+	public Set<byte[]> zPopMax(byte[] key, int count) {
+		Assert.notNull(key, "Key must not be null!");
+		Assert.isTrue(count > 0, "count must greater than 0!");
+
+		Set<Tuple> tuples = connection.invoke().from(RedisSortedSetAsyncCommands::zpopmax, key, count).get(LettuceConverters::toTupleSet);
+		Set<byte[]> tupleValues = new LinkedHashSet<>();
+		tuples.forEach(tuple -> {
+			tupleValues.add(tuple.getValue());
+		});
+
+		return tupleValues;
+	}
+
+	@Override
+	public Tuple zPopMaxWithScore(byte[] key) {
+		Assert.notNull(key, "Key must not be null!");
+
+		return connection.invoke().from(RedisSortedSetAsyncCommands::zpopmax, key).get(LettuceConverters::toTuple);
+	}
+
+	@Override
+	public Set<Tuple> zPopMaxWithScore(byte[] key, int count) {
+		Assert.notNull(key, "Key must not be null!");
+		Assert.isTrue(count > 0, "count must greater than 0!");
+
+		return connection.invoke().from(RedisSortedSetAsyncCommands::zpopmax, key, count).get(LettuceConverters::toTupleSet);
 	}
 
 	public RedisClusterCommands<byte[], byte[]> getConnection() {

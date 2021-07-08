@@ -1131,6 +1131,30 @@ public interface DefaultedRedisConnection extends RedisConnection {
 		return zSetCommands().zRangeByScore(key, min, max, offset, count);
 	}
 
+	@Override
+	@Deprecated
+	default byte[] zPopMax(byte[] key) {
+		return zSetCommands().zPopMax(key);
+	}
+
+	@Override
+	@Deprecated
+	default Set<byte[]> zPopMax(byte[] key, int count) {
+		return zSetCommands().zPopMax(key, count);
+	}
+
+	@Override
+	@Deprecated
+	default Tuple zPopMaxWithScore(byte[] key) {
+		return zSetCommands().zPopMaxWithScore(key);
+	}
+
+	@Override
+	@Deprecated
+	default Set<Tuple> zPopMaxWithScore(byte[] key, int count) {
+		return zSetCommands().zPopMaxWithScore(key, count);
+	}
+
 	// HASH COMMANDS
 
 	/** @deprecated in favor of {@link RedisConnection#hashCommands()}}. */

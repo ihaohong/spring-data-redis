@@ -15,17 +15,13 @@
  */
 package org.springframework.data.redis.connection.jedis;
 
-import redis.clients.jedis.BinaryJedis;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.MultiKeyPipelineBase;
-import redis.clients.jedis.ScanParams;
-import redis.clients.jedis.ScanResult;
-import redis.clients.jedis.ZParams;
+import redis.clients.jedis.*;
 import redis.clients.jedis.params.ZAddParams;
 
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.data.redis.connection.RedisZSetCommands;
 import org.springframework.data.redis.connection.RedisZSetCommands.ZAddArgs.Flag;
@@ -580,6 +576,46 @@ class JedisZSetCommands implements RedisZSetCommands {
 
 		return connection.invoke().from(BinaryJedis::zrevrangeByLex, MultiKeyPipelineBase::zrevrangeByLex, key, max, min)
 				.get(LinkedHashSet::new);
+	}
+
+	@Override
+	public byte[] zPopMax(byte[] key) {
+		Assert.notNull(key, "Key must not be null!");
+
+		Tuple tuple = connection.invoke().from(BinaryJedis::zpopmax, MultiKeyPipelineBase::zpopmax, key)
+				.get(JedisConverters::toTuple);
+
+		return tuple == null ? null : tuple.getValue();
+	}
+
+	@Override
+	public Set<byte[]> zPopMax(byte[] key, int count) {
+		Assert.notNull(key, "Key must not be null!");
+		Assert.isTrue(count > 0, () -> "count must greater than 0!");
+
+		Set<Tuple> tuples = connection.invoke().from(BinaryJedis::zpopmax, MultiKeyPipelineBase::zpopmax, key, count).get(JedisConverters::toTupleSet);
+		Set<byte[]> tupleValues = new LinkedHashSet<>();
+		tuples.forEach(tuple -> {
+			 tupleValues.add(tuple.getValue());
+		});
+
+		return tupleValues;
+	}
+
+	@Override
+	public Tuple zPopMaxWithScore(byte[] key) {
+		Assert.notNull(key, "Key must not be null!");
+
+		return connection.invoke().from(BinaryJedis::zpopmax, MultiKeyPipelineBase::zpopmax, key)
+				.get(JedisConverters::toTuple);
+	}
+
+	@Override
+	public Set<Tuple> zPopMaxWithScore(byte[] key, int count) {
+		Assert.notNull(key, "Key must not be null!");
+		Assert.isTrue(count > 0, () -> "count must greater than 0!");
+
+		return connection.invoke().from(BinaryJedis::zpopmax, MultiKeyPipelineBase::zpopmax, key, count).get(JedisConverters::toTupleSet);
 	}
 
 	private boolean isPipelined() {
