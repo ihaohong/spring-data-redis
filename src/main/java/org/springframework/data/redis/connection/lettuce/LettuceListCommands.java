@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.data.redis.connection.RedisListCommands;
+import org.springframework.data.redis.core.TimeoutUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
@@ -301,15 +302,11 @@ class LettuceListCommands implements RedisListCommands {
 
 		if (TimeUnit.MILLISECONDS == unit) {
 			return connection.invoke(connection.getAsyncDedicatedConnection())
-					.from(RedisListAsyncCommands::blpop, preciseTimeout(timeout, unit), keys).get(LettuceListCommands::toBytesList);
+					.from(RedisListAsyncCommands::blpop, TimeoutUtils.toDoubleSeconds(timeout, unit), keys).get(LettuceListCommands::toBytesList);
 		}
 
 		return connection.invoke(connection.getAsyncDedicatedConnection())
 				.from(RedisListAsyncCommands::blpop, timeout, keys).get(LettuceListCommands::toBytesList);
-	}
-
-	static double preciseTimeout(long val, TimeUnit unit) {
-		return (double) unit.toMillis(val) / 1000.0D;
 	}
 
 	/*
@@ -329,7 +326,7 @@ class LettuceListCommands implements RedisListCommands {
 
 		if (TimeUnit.MILLISECONDS == unit) {
 			return connection.invoke(connection.getAsyncDedicatedConnection())
-					.from(RedisListAsyncCommands::brpop, preciseTimeout(timeout, unit), keys).get(LettuceListCommands::toBytesList);
+					.from(RedisListAsyncCommands::brpop, TimeoutUtils.toDoubleSeconds(timeout, unit), keys).get(LettuceListCommands::toBytesList);
 		}
 
 		return connection.invoke(connection.getAsyncDedicatedConnection())

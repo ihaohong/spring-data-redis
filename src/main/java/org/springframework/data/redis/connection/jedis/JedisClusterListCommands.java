@@ -15,6 +15,7 @@
  */
 package org.springframework.data.redis.connection.jedis;
 
+import org.springframework.data.redis.core.TimeoutUtils;
 import redis.clients.jedis.args.ListDirection;
 import redis.clients.jedis.params.LPosParams;
 
@@ -378,7 +379,7 @@ class JedisClusterListCommands implements RedisListCommands {
 		if (ClusterSlotHashUtil.isSameSlotForAllKeys(keys)) {
 			try {
 				if (TimeUnit.MILLISECONDS == unit) {
-					return connection.getCluster().blpop(preciseTimeout(timeout, unit), keys);
+					return connection.getCluster().blpop(TimeoutUtils.toDoubleSeconds(timeout, unit), keys);
 				} else {
 					return connection.getCluster().blpop(timeout, keys);
 				}
@@ -390,7 +391,7 @@ class JedisClusterListCommands implements RedisListCommands {
 		if (TimeUnit.MILLISECONDS == unit) {
 			return connection.getClusterCommandExecutor()
 					.executeMultiKeyCommand(
-							(JedisMultiKeyClusterCommandCallback<List<byte[]>>) (client, key) -> client.blpop(preciseTimeout(timeout, unit), key),
+							(JedisMultiKeyClusterCommandCallback<List<byte[]>>) (client, key) -> client.blpop(TimeoutUtils.toDoubleSeconds(timeout, unit), key),
 							Arrays.asList(keys))
 					.getFirstNonNullNotEmptyOrDefault(Collections.<byte[]> emptyList());
 		} else {
@@ -400,10 +401,6 @@ class JedisClusterListCommands implements RedisListCommands {
 							Arrays.asList(keys))
 					.getFirstNonNullNotEmptyOrDefault(Collections.<byte[]> emptyList());
 		}
-	}
-
-	static double preciseTimeout(long val, TimeUnit unit) {
-		return (double) unit.toMillis(val) / 1000.0D;
 	}
 
 	@Override
@@ -424,7 +421,7 @@ class JedisClusterListCommands implements RedisListCommands {
 		if (ClusterSlotHashUtil.isSameSlotForAllKeys(keys)) {
 			try {
 				if (TimeUnit.MILLISECONDS == unit) {
-					return connection.getCluster().brpop(preciseTimeout(timeout, unit), keys);
+					return connection.getCluster().brpop(TimeoutUtils.toDoubleSeconds(timeout, unit), keys);
 				} else {
 					return connection.getCluster().brpop(timeout, keys);
 				}
@@ -436,7 +433,7 @@ class JedisClusterListCommands implements RedisListCommands {
 		if (TimeUnit.MILLISECONDS == unit) {
 			return connection.getClusterCommandExecutor()
 					.executeMultiKeyCommand(
-							(JedisMultiKeyClusterCommandCallback<List<byte[]>>) (client, key) -> client.brpop(preciseTimeout(timeout, unit), key),
+							(JedisMultiKeyClusterCommandCallback<List<byte[]>>) (client, key) -> client.brpop(TimeoutUtils.toDoubleSeconds(timeout, unit), key),
 							Arrays.asList(keys))
 					.getFirstNonNullNotEmptyOrDefault(Collections.<byte[]> emptyList());
 		} else {

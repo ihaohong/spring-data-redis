@@ -15,6 +15,7 @@
  */
 package org.springframework.data.redis.connection.jedis;
 
+import org.springframework.data.redis.core.TimeoutUtils;
 import redis.clients.jedis.BinaryJedis;
 import redis.clients.jedis.MultiKeyPipelineBase;
 import redis.clients.jedis.Protocol;
@@ -368,17 +369,12 @@ class JedisListCommands implements RedisListCommands {
 		System.arraycopy(keys, 0, args, 0, keys.length);
 
 		if (TimeUnit.MILLISECONDS == unit) {
-			args[args.length - 1] = Protocol.toByteArray(preciseTimeout(timeout, unit));
+			args[args.length - 1] = Protocol.toByteArray(TimeoutUtils.toDoubleSeconds(timeout, unit));
 		} else {
 			args[args.length - 1] = Protocol.toByteArray(timeout);
 		}
 
 		return args;
-	}
-
-
-	static double preciseTimeout(long val, TimeUnit unit) {
-		return (double) unit.toMillis(val) / 1000.0D;
 	}
 
 }
