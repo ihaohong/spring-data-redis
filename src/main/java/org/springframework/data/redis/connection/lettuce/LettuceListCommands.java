@@ -22,6 +22,7 @@ import io.lettuce.core.api.async.RedisListAsyncCommands;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.data.redis.connection.RedisListCommands;
 import org.springframework.lang.Nullable;
@@ -290,12 +291,25 @@ class LettuceListCommands implements RedisListCommands {
 	 */
 	@Override
 	public List<byte[]> bLPop(int timeout, byte[]... keys) {
+		return bLPop(timeout, TimeUnit.SECONDS, keys);
+	}
 
+	@Override
+	public List<byte[]> bLPop(int timeout, TimeUnit unit, byte[]... keys) {
 		Assert.notNull(keys, "Key must not be null!");
 		Assert.noNullElements(keys, "Keys must not contain null elements!");
 
+		if (TimeUnit.MILLISECONDS == unit) {
+			return connection.invoke(connection.getAsyncDedicatedConnection())
+					.from(RedisListAsyncCommands::blpop, preciseTimeout(timeout, unit), keys).get(LettuceListCommands::toBytesList);
+		}
+
 		return connection.invoke(connection.getAsyncDedicatedConnection())
 				.from(RedisListAsyncCommands::blpop, timeout, keys).get(LettuceListCommands::toBytesList);
+	}
+
+	static double preciseTimeout(long val, TimeUnit unit) {
+		return (double) unit.toMillis(val) / 1000.0D;
 	}
 
 	/*
@@ -304,9 +318,19 @@ class LettuceListCommands implements RedisListCommands {
 	 */
 	@Override
 	public List<byte[]> bRPop(int timeout, byte[]... keys) {
+		return bRPop(timeout, TimeUnit.SECONDS, keys);
+	}
+
+	@Override
+	public List<byte[]> bRPop(int timeout, TimeUnit unit, byte[]... keys) {
 
 		Assert.notNull(keys, "Key must not be null!");
 		Assert.noNullElements(keys, "Keys must not contain null elements!");
+
+		if (TimeUnit.MILLISECONDS == unit) {
+			return connection.invoke(connection.getAsyncDedicatedConnection())
+					.from(RedisListAsyncCommands::brpop, preciseTimeout(timeout, unit), keys).get(LettuceListCommands::toBytesList);
+		}
 
 		return connection.invoke(connection.getAsyncDedicatedConnection())
 				.from(RedisListAsyncCommands::brpop, timeout, keys).get(LettuceListCommands::toBytesList);

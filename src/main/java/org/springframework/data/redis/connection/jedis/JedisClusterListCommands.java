@@ -21,6 +21,7 @@ import redis.clients.jedis.params.LPosParams;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.ClusterSlotHashUtil;
@@ -359,29 +360,55 @@ class JedisClusterListCommands implements RedisListCommands {
 		}
 	}
 
+	@Override
+	public List<byte[]> bLPop(int timeout, byte[]... keys) {
+		return bLPop(timeout, TimeUnit.SECONDS, keys);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.redis.connection.RedisListCommands#bLPop(int, byte[][])
 	 */
 	@Override
-	public List<byte[]> bLPop(int timeout, byte[]... keys) {
+	public List<byte[]> bLPop(int timeout, TimeUnit unit, byte[]... keys) {
 
 		Assert.notNull(keys, "Key must not be null!");
 		Assert.noNullElements(keys, "Keys must not contain null elements!");
 
 		if (ClusterSlotHashUtil.isSameSlotForAllKeys(keys)) {
 			try {
-				return connection.getCluster().blpop(timeout, keys);
+				if (TimeUnit.MILLISECONDS == unit) {
+					return connection.getCluster().blpop(preciseTimeout(timeout, unit), keys);
+				} else {
+					return connection.getCluster().blpop(timeout, keys);
+				}
 			} catch (Exception ex) {
 				throw convertJedisAccessException(ex);
 			}
 		}
 
-		return connection.getClusterCommandExecutor()
-				.executeMultiKeyCommand(
-						(JedisMultiKeyClusterCommandCallback<List<byte[]>>) (client, key) -> client.blpop(timeout, key),
-						Arrays.asList(keys))
-				.getFirstNonNullNotEmptyOrDefault(Collections.<byte[]> emptyList());
+		if (TimeUnit.MILLISECONDS == unit) {
+			return connection.getClusterCommandExecutor()
+					.executeMultiKeyCommand(
+							(JedisMultiKeyClusterCommandCallback<List<byte[]>>) (client, key) -> client.blpop(preciseTimeout(timeout, unit), key),
+							Arrays.asList(keys))
+					.getFirstNonNullNotEmptyOrDefault(Collections.<byte[]> emptyList());
+		} else {
+			return connection.getClusterCommandExecutor()
+					.executeMultiKeyCommand(
+							(JedisMultiKeyClusterCommandCallback<List<byte[]>>) (client, key) -> client.blpop(timeout, key),
+							Arrays.asList(keys))
+					.getFirstNonNullNotEmptyOrDefault(Collections.<byte[]> emptyList());
+		}
+	}
+
+	static double preciseTimeout(long val, TimeUnit unit) {
+		return (double) unit.toMillis(val) / 1000.0D;
+	}
+
+	@Override
+	public List<byte[]> bRPop(int timeout, byte[]... keys) {
+		return bRPop(timeout, TimeUnit.SECONDS, keys);
 	}
 
 	/*
@@ -389,24 +416,36 @@ class JedisClusterListCommands implements RedisListCommands {
 	 * @see org.springframework.data.redis.connection.RedisListCommands#bRPop(int, byte[][])
 	 */
 	@Override
-	public List<byte[]> bRPop(int timeout, byte[]... keys) {
+	public List<byte[]> bRPop(int timeout, TimeUnit unit, byte[]... keys) {
 
 		Assert.notNull(keys, "Key must not be null!");
 		Assert.noNullElements(keys, "Keys must not contain null elements!");
 
 		if (ClusterSlotHashUtil.isSameSlotForAllKeys(keys)) {
 			try {
-				return connection.getCluster().brpop(timeout, keys);
+				if (TimeUnit.MILLISECONDS == unit) {
+					return connection.getCluster().brpop(preciseTimeout(timeout, unit), keys);
+				} else {
+					return connection.getCluster().brpop(timeout, keys);
+				}
 			} catch (Exception ex) {
 				throw convertJedisAccessException(ex);
 			}
 		}
 
-		return connection.getClusterCommandExecutor()
-				.executeMultiKeyCommand(
-						(JedisMultiKeyClusterCommandCallback<List<byte[]>>) (client, key) -> client.brpop(timeout, key),
-						Arrays.asList(keys))
-				.getFirstNonNullNotEmptyOrDefault(Collections.<byte[]> emptyList());
+		if (TimeUnit.MILLISECONDS == unit) {
+			return connection.getClusterCommandExecutor()
+					.executeMultiKeyCommand(
+							(JedisMultiKeyClusterCommandCallback<List<byte[]>>) (client, key) -> client.brpop(preciseTimeout(timeout, unit), key),
+							Arrays.asList(keys))
+					.getFirstNonNullNotEmptyOrDefault(Collections.<byte[]> emptyList());
+		} else {
+			return connection.getClusterCommandExecutor()
+					.executeMultiKeyCommand(
+							(JedisMultiKeyClusterCommandCallback<List<byte[]>>) (client, key) -> client.brpop(timeout, key),
+							Arrays.asList(keys))
+					.getFirstNonNullNotEmptyOrDefault(Collections.<byte[]> emptyList());
+		}
 	}
 
 	/*

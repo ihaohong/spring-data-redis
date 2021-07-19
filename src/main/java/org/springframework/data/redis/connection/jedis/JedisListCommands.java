@@ -23,6 +23,7 @@ import redis.clients.jedis.params.LPosParams;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.data.redis.connection.RedisListCommands;
 import org.springframework.lang.Nullable;
@@ -297,6 +298,19 @@ class JedisListCommands implements RedisListCommands {
 		return connection.invoke().just(BinaryJedis::blpop, MultiKeyPipelineBase::blpop, bXPopArgs(timeout, keys));
 	}
 
+	@Override
+	public List<byte[]> bLPop(int timeout, TimeUnit unit, byte[]... keys) {
+
+		Assert.notNull(keys, "Key must not be null!");
+		Assert.noNullElements(keys, "Keys must not contain null elements!");
+
+		if (TimeUnit.MILLISECONDS == unit) {
+			return connection.invoke().just(BinaryJedis::blpop, MultiKeyPipelineBase::blpop, bXPopArgs(timeout, unit, keys));
+		}
+
+		return bLPop(timeout, keys);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.redis.connection.RedisListCommands#bRPop(int, byte[][])
@@ -308,6 +322,15 @@ class JedisListCommands implements RedisListCommands {
 		Assert.noNullElements(keys, "Keys must not contain null elements!");
 
 		return connection.invoke().just(BinaryJedis::brpop, MultiKeyPipelineBase::brpop, bXPopArgs(timeout, keys));
+	}
+
+	@Override
+	public List<byte[]> bRPop(int timeout, TimeUnit unit, byte[]... keys) {
+
+		Assert.notNull(keys, "Key must not be null!");
+		Assert.noNullElements(keys, "Keys must not contain null elements!");
+
+		return connection.invoke().just(BinaryJedis::brpop, MultiKeyPipelineBase::brpop, bXPopArgs(timeout, unit, keys));
 	}
 
 	/*
@@ -337,12 +360,25 @@ class JedisListCommands implements RedisListCommands {
 	}
 
 	private static byte[][] bXPopArgs(int timeout, byte[]... keys) {
+		return bXPopArgs(timeout, TimeUnit.SECONDS, keys);
+	}
 
+	private static byte[][] bXPopArgs(int timeout, TimeUnit unit, byte[]... keys) {
 		byte[][] args = new byte[keys.length + 1][];
 		System.arraycopy(keys, 0, args, 0, keys.length);
 
-		args[args.length - 1] = Protocol.toByteArray(timeout);
+		if (TimeUnit.MILLISECONDS == unit) {
+			args[args.length - 1] = Protocol.toByteArray(preciseTimeout(timeout, unit));
+		} else {
+			args[args.length - 1] = Protocol.toByteArray(timeout);
+		}
+
 		return args;
+	}
+
+
+	static double preciseTimeout(long val, TimeUnit unit) {
+		return (double) unit.toMillis(val) / 1000.0D;
 	}
 
 }

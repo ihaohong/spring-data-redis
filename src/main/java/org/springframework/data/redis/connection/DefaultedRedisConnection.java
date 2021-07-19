@@ -779,12 +779,25 @@ public interface DefaultedRedisConnection extends RedisConnection {
 		return listCommands().bLPop(timeout, keys);
 	}
 
+	@Override
+	@Deprecated
+	default List<byte[]> bLPop(int timeout, TimeUnit unit, byte[]... keys) {
+		return listCommands().bLPop(timeout, unit, keys);
+	}
+
 	/** @deprecated in favor of {@link RedisConnection#listCommands()}}. */
 	@Override
 	@Deprecated
 	default List<byte[]> bRPop(int timeout, byte[]... keys) {
 		return listCommands().bRPop(timeout, keys);
 	}
+
+	@Override
+	@Deprecated
+	default List<byte[]> bRPop(int timeout, TimeUnit unit, byte[]... keys) {
+		return listCommands().bRPop(timeout, unit, keys);
+	}
+
 
 	/** @deprecated in favor of {@link RedisConnection#listCommands()}}. */
 	@Override

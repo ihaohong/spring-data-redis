@@ -16,6 +16,7 @@
 package org.springframework.data.redis.connection;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
@@ -314,6 +315,10 @@ public interface RedisListCommands {
 	@Nullable
 	List<byte[]> bLPop(int timeout, byte[]... keys);
 
+
+	@Nullable
+	List<byte[]> bLPop(int timeout, TimeUnit unit, byte[]... keys);
+
 	/**
 	 * Removes and returns last element from lists stored at {@code keys}. <br>
 	 * <b>Blocks connection</b> until element available or {@code timeout} reached.
@@ -327,6 +332,9 @@ public interface RedisListCommands {
 	 */
 	@Nullable
 	List<byte[]> bRPop(int timeout, byte[]... keys);
+
+	@Nullable
+	List<byte[]> bRPop(int timeout, TimeUnit unit, byte[]... keys);
 
 	/**
 	 * Remove the last element from list at {@code srcKey}, append it to {@code dstKey} and return its value.
