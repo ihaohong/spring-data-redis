@@ -296,7 +296,7 @@ class JedisListCommands implements RedisListCommands {
 		Assert.notNull(keys, "Key must not be null!");
 		Assert.noNullElements(keys, "Keys must not contain null elements!");
 
-		return connection.invoke().just(BinaryJedis::blpop, MultiKeyPipelineBase::blpop, bXPopArgs(timeout, keys));
+		return connection.invoke().just(BinaryJedis::blpop, MultiKeyPipelineBase::blpop, bXPopArgs(timeout, TimeUnit.SECONDS, keys));
 	}
 
 	@Override
@@ -322,7 +322,7 @@ class JedisListCommands implements RedisListCommands {
 		Assert.notNull(keys, "Key must not be null!");
 		Assert.noNullElements(keys, "Keys must not contain null elements!");
 
-		return connection.invoke().just(BinaryJedis::brpop, MultiKeyPipelineBase::brpop, bXPopArgs(timeout, keys));
+		return connection.invoke().just(BinaryJedis::brpop, MultiKeyPipelineBase::brpop, bXPopArgs(timeout, TimeUnit.SECONDS, keys));
 	}
 
 	@Override
@@ -358,10 +358,6 @@ class JedisListCommands implements RedisListCommands {
 		Assert.notNull(dstKey, "Destination key must not be null!");
 
 		return connection.invoke().just(BinaryJedis::brpoplpush, MultiKeyPipelineBase::brpoplpush, srcKey, dstKey, timeout);
-	}
-
-	private static byte[][] bXPopArgs(int timeout, byte[]... keys) {
-		return bXPopArgs(timeout, TimeUnit.SECONDS, keys);
 	}
 
 	private static byte[][] bXPopArgs(int timeout, TimeUnit unit, byte[]... keys) {
