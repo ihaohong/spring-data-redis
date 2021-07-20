@@ -44,6 +44,7 @@ import org.springframework.util.ObjectUtils;
  * @author Christoph Strobl
  * @author Mark Paluch
  * @author dengliming
+ * @author ihaohong
  * @since 2.0
  */
 public interface ReactiveListCommands {

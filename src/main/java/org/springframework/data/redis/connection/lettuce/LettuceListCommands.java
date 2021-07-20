@@ -33,6 +33,7 @@ import org.springframework.util.Assert;
  * @author Christoph Strobl
  * @author Mark Paluch
  * @author dengliming
+ * @author ihaohong
  * @since 2.0
  */
 class LettuceListCommands implements RedisListCommands {

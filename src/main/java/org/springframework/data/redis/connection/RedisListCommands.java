@@ -28,6 +28,7 @@ import org.springframework.util.CollectionUtils;
  * @author Christoph Strobl
  * @author Mark Paluch
  * @author dengliming
+ * @author ihaohong
  */
 public interface RedisListCommands {
 
