@@ -299,6 +299,10 @@ class JedisListCommands implements RedisListCommands {
 		return connection.invoke().just(BinaryJedis::blpop, MultiKeyPipelineBase::blpop, bXPopArgs(timeout, TimeUnit.SECONDS, keys));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.redis.connection.RedisListCommands#bLPop(int, java.util.concurrent.TimeUnit, byte[][])
+	 */
 	@Override
 	public List<byte[]> bLPop(int timeout, TimeUnit unit, byte[]... keys) {
 
@@ -325,6 +329,10 @@ class JedisListCommands implements RedisListCommands {
 		return connection.invoke().just(BinaryJedis::brpop, MultiKeyPipelineBase::brpop, bXPopArgs(timeout, TimeUnit.SECONDS, keys));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.redis.connection.RedisListCommands#bRPop(int, java.util.concurrent.TimeUnit, byte[][])
+	 */
 	@Override
 	public List<byte[]> bRPop(int timeout, TimeUnit unit, byte[]... keys) {
 

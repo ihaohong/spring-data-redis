@@ -295,6 +295,10 @@ class LettuceListCommands implements RedisListCommands {
 		return bLPop(timeout, TimeUnit.SECONDS, keys);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.redis.connection.RedisListCommands#bLPop(int, java.util.concurrent.TimeUnit, byte[][])
+	 */
 	@Override
 	public List<byte[]> bLPop(int timeout, TimeUnit unit, byte[]... keys) {
 		Assert.notNull(keys, "Key must not be null!");
@@ -318,6 +322,10 @@ class LettuceListCommands implements RedisListCommands {
 		return bRPop(timeout, TimeUnit.SECONDS, keys);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.redis.connection.RedisListCommands#bRPop(int, java.util.concurrent.TimeUnit, byte[][])
+	 */
 	@Override
 	public List<byte[]> bRPop(int timeout, TimeUnit unit, byte[]... keys) {
 

@@ -361,6 +361,10 @@ class JedisClusterListCommands implements RedisListCommands {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.redis.connection.RedisListCommands#rPop(byte[], long)
+	 */
 	@Override
 	public List<byte[]> bLPop(int timeout, byte[]... keys) {
 		return bLPop(timeout, TimeUnit.SECONDS, keys);
@@ -368,7 +372,7 @@ class JedisClusterListCommands implements RedisListCommands {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.redis.connection.RedisListCommands#bLPop(int, byte[][])
+	 * @see org.springframework.data.redis.connection.RedisListCommands#bLPop(int, java.util.concurrent.TimeUnit, byte[][])
 	 */
 	@Override
 	public List<byte[]> bLPop(int timeout, TimeUnit unit, byte[]... keys) {
@@ -403,6 +407,10 @@ class JedisClusterListCommands implements RedisListCommands {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.redis.connection.RedisListCommands#bRPop(int, byte[][])
+	 */
 	@Override
 	public List<byte[]> bRPop(int timeout, byte[]... keys) {
 		return bRPop(timeout, TimeUnit.SECONDS, keys);

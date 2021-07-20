@@ -1290,6 +1290,13 @@ public interface ReactiveListCommands {
 			return blockingFor(timeout.toMillis(), TimeUnit.MICROSECONDS);
 		}
 
+		/**
+		 * Applies a {@link Duration timeout}. Constructs a new command instance with all previously configured properties.
+		 *
+		 * @param timeout must not be {@literal null}.
+		 * @param timeUnit must node be {@literal null}.
+		 * @return a new {@link BPopCommand} with {@link Duration timeout} applied.
+		 */
 		public BPopCommand blockingFor(long timeout, TimeUnit timeUnit) {
 			Assert.notNull(timeUnit, "TimeUnit must not be null!");
 
@@ -1318,6 +1325,9 @@ public interface ReactiveListCommands {
 			return timeout;
 		}
 
+		/**
+		 * @return
+		 */
 		public TimeUnit getTimeUnit() {
 			return timeUnit;
 		}
